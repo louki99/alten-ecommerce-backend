@@ -8,25 +8,27 @@ import io.swagger.v3.oas.annotations.info.License;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.List;
+
 @SpringBootApplication
 @OpenAPIDefinition(
 		info = @Info(
-				title = "Service Rcc microservice REST API Documentation",
-				description = "API endpoints for interacting with the Service Rcc microservice within the iMDAE platform, which provides request certificates from PKI.",
+				title = "Alten E-commerce Simple Application REST API Documentation",
+				description = "API endpoints for interacting with the Alten e-commerce application, designed to facilitate seamless online shopping experiences for users and companies.",
 				version = "v1",
 				contact = @Contact(
-						name = "Teams digiup",
-						email = "contact@gmail.com",
-						url = "https://www.imdae.org"
+						name = "Alten Support Team",
+						email = "support@alten.com",
+						url = "https://www.alten.com"
 				),
 				license = @License(
 						name = "Apache 2.0",
-						url = "https://www.imdae.org"
+						url = "https://www.alten.com/license"
 				)
 		),
 		externalDocs = @ExternalDocumentation(
-				description =  "Service Rcc microservice REST API Documentation",
-				url = "https://www.imdae.org/swagger-ui.html"
+				description = "Alten E-commerce Microservice REST API Documentation",
+				url = "https://www.alten-ecommerce.com/swagger-ui.html"
 		)
 )
 public class EcommerceApplication {
