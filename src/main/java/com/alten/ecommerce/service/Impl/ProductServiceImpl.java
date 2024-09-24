@@ -3,17 +3,21 @@ package com.alten.ecommerce.service.Impl;
 import com.alten.ecommerce.dto.ProductDTO;
 import com.alten.ecommerce.exception.ResourceNotFoundException;
 import com.alten.ecommerce.mapper.ProductMapper;
+import com.alten.ecommerce.model.InventoryStatus;
 import com.alten.ecommerce.model.Product;
 import com.alten.ecommerce.repository.ProductRepository;
 import com.alten.ecommerce.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -29,12 +33,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> listProducts() {
-        List<ProductDTO> products = productRepository.findAll().stream()
-                .map(productMapper::mapToProductDTO)
-                .toList();
-        log.info("found {} products",products.size());
-        return products;
+    public Page<ProductDTO> listProducts(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").ascending());
+        Page<Product> productPage = productRepository.findAll(pageRequest);
+        return productPage.map(productMapper::mapToProductDTO);
     }
 
     @Override
@@ -76,15 +78,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> filterProducts(String name, Double minPrice, Double maxPrice, String category) {
-        log.info("Filtering products with name: {}, minPrice: {}, maxPrice: {}, category: {}", name, minPrice, maxPrice, category);
-        List<Product> products = productRepository.findByFilters(name, minPrice, maxPrice, category);
-        List<ProductDTO> productDTOs = products.stream()
-                .map(productMapper::mapToProductDTO)
-                .collect(Collectors.toList());
-        log.info("Filtered products count: {}", productDTOs.size());
-        return productDTOs;
+    public Page<Product> filteredProducts(String name,String category,int page,int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").ascending());
+        return productRepository.findAllByNameContainingAndCategoryContaining(
+                name,
+                category,
+                pageable
+        );
     }
+
 
     @Override
     public void deleteProduct(long id) {
